@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing / caching
+.pytest_cache/
+htmlcov/
+.coverage
+*.cover
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Results (regenerated on demand)
+results/
+site/
+
+# Manuscript source (proprietary)
+*.docx
+
+# Scratch / temporary
+*.log
+pytest_output.txt
+pytest_output_utf8.txt
