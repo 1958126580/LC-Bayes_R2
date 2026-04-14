@@ -56,25 +56,57 @@ LC-Bayes-R2/
 └── requirements.txt           # Pinned dependencies
 ```
 
-### Mathematical Core
+### Mathematical Core & Algorithm Foundations
 
-The framework implements four tightly integrated statistical models:
+The LC-Bayes R2 framework bridges quantitative genetics and evolutionary biology through four tightly integrated statistical engines. This architecture isolates rare recessive lethal variants from background polygenic noise.
 
-**1. Selection-Aware LOEUF Correction** — Poisson GLM (Equation 1)
+#### 1. Selection-Aware LOEUF Correction (Poisson GLM)
+
+Standard LOEUF (Loss-of-function Observed/Expected Upper-bound Fraction) scores are artificially upward-biased in dairy cattle due to intense directional selection. We correct the expected number of variants ($E_g$) using a Poisson Generalized Linear Model:
 
 $$E_g = 2n \sum_v \mu_v \cdot c_v \cdot \exp(\gamma_1 |\text{iHS}|_g + \gamma_2 F_{\text{ST},g} + \gamma_3 \rho_g)$$
 
-**2. Bayesian Variance Component** — Spike-and-Slab Prior (Equations 2–4)
+*   **$\mu_v$**: Baseline mutation rate of variant $v$ (adjusted for CpG transition context).
+*   **$c_v$**: Functional consequence weighting (e.g., frame-shift, stop-gain).
+*   **$|\text{iHS}|_g$**: Absolute integrated Haplotype Score, capturing recent selection signatures.
+*   **$F_{\text{ST},g}$**: Fixation index measuring differentiation from ancestral unselected populations.
+*   **$\rho_g$**: Local recombination rate, adjusting for background selection constraints.
 
+*Impact: Reclassifies highly constrained genes previously masked by artificial selection.*
+
+#### 2. Fetal-Maternal Variance Decomposition (HMM)
+
+Differentiating embryonic lethality (fetal genotype) from maternal implantation failure (endometrial environment) requires precise phase estimation. We deploy a Forward-Backward algorithm on parental haplotypes:
+
+$$P(g_{ij}^{\text{fetus}} = k \mid \mathbf{h}_i^{\text{sire}}, \mathbf{h}_j^{\text{dam}}, \mathbf{M}) = \frac{\alpha_k(t) \beta_k(t)}{\sum_{m} \alpha_m(t) \beta_m(t)}$$
+
+*   **$\mathbf{h}_i^{\text{sire}}, \mathbf{h}_j^{\text{dam}}$**: Phased sire and dam high-density haplotypes.
+*   **$\mathbf{M}$**: Transition sparse matrix strictly derived from Haldane's mapping function $M(r) = \frac{1}{2}(1 - e^{-2r})$.
+*   **$\alpha_k, \beta_k$**: Forward and backward variables computed recursively across polymorphic sites.
+
+#### 3. Spike-and-Slab Bayesian Variable Selection
+
+To shrink the vast majority of non-lethal candidate genes to strictly zero, we implement a dimension-reducing hierarchical model with a Spike-and-Slab prior:
+
+$$\mathbf{y} = \mathbf{X}\mathbf{b} + \mathbf{Z}_{\text{mat}}\mathbf{u}_{\text{mat}} + \mathbf{Z}_{\text{fet}}\mathbf{u}_{\text{fet}} + \mathbf{e}$$
 $$\tau_g^2 \sim \pi_g \cdot \text{Inv-}\chi^2(\nu, s^2) + (1 - \pi_g) \cdot \delta_0$$
+$$\text{logit}(\pi_g) = \alpha_0 + \alpha_1 \text{cLOEUF}_g$$
 
-**3. Fetal-Maternal HMM** — Forward-Backward Algorithm (Equations 6–7)
+*   **$\tau_g^2$**: Proportion of variance explained by gene $g$.
+*   **$\pi_g$**: Posterior Probability of Association (PPA).
+*   **$\delta_0$**: Dirac delta mass strictly at zero (the "spike").
+*   **$\text{cLOEUF}_g$**: Corrected evolutionary constraint acting as a biological prior.
 
-$$P(g_{ij}^{\text{fetus}} = k \mid \mathbf{h}_i^{\text{sire}}, \mathbf{h}_j^{\text{dam}}, \mathbf{M})$$
+#### 4. Genomic Prediction Weight Derivation (ssGBLUP)
 
-**4. ssGBLUP Weight Derivation** (Equation 9)
+To make discoveries actionable for commercial breeding programs, computationally expensive MCMC posteriors are projected back into single-step GBLUP weights:
 
-$$d_j = 1 + \frac{E(\tau^2 \mid \mathbf{y}) \cdot w_j + \text{Var}(\beta_j \mid \mathbf{y})}{\sigma_0^2}$$
+$$d_j = 1 + \frac{\mathbb{E}(\tau_g^2 \mid \mathbf{y}) \cdot w_j + \text{Var}(\beta_j \mid \mathbf{y})}{\sigma_0^2}$$
+
+*   **$d_j$**: The dynamically allocated marker penalty weight for the $j$-th SNP.
+*   **$\sigma_0^2$**: Expected background baseline polygenic variance.
+
+*Impact: Linearizes highly non-additive lethal variance for $O(N)$ inversion of the genomic relationship matrix ($\mathbf{H}^{-1}$).*
 
 ## Quick Start
 
