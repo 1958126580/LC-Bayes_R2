@@ -89,16 +89,16 @@ def fallback_to_mock_if_missing(fallback_func: Callable) -> Callable:
                     _YELLOW, _RESET,
                 )
                 logger.warning(
-                    "%s║  ⚠  External tool missing: %-23s  ║%s",
-                    _YELLOW, tool_name[:23], _RESET,
+                    "%s║  ⚠  External tool missing: %-26s║%s",
+                    _YELLOW, tool_name[:26], _RESET,
                 )
                 logger.warning(
-                    "%s║  → Engaging mathematical fallback engine...        ║%s",
+                    "%s║  → Engaging mathematical fallback engine...          ║%s",
                     _YELLOW, _RESET,
                 )
                 logger.warning(
-                    "%s║  → Error was: %-37s║%s",
-                    _YELLOW, str(e)[:37], _RESET,
+                    "%s║  → Error was: %-39s║%s",
+                    _YELLOW, str(e)[:39], _RESET,
                 )
                 logger.warning(
                     "%s╚══════════════════════════════════════════════════════╝%s",

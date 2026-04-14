@@ -157,7 +157,7 @@ The framework uses a **self-healing fallback mechanism** for external bioinforma
 
 ```
 ╔══════════════════════════════════════════════════════╗
-║  ⚠  External tool missing: RelateCluesRunner.run    ║
+║  ⚠  External tool missing: RelateCluesRunner.run     ║
 ║  → Engaging mathematical fallback engine...          ║
 ║  → Error was: Relate binary not found in PATH        ║
 ╚══════════════════════════════════════════════════════╝
