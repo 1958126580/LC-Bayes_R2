@@ -72,7 +72,7 @@ $$E_g = 2n \sum_v \mu_v \cdot c_v \cdot \exp(\gamma_1 |\text{iHS}|_g + \gamma_2 
 *   **$F_{\text{ST},g}$**: Fixation index measuring differentiation from ancestral unselected populations.
 *   **$\rho_g$**: Local recombination rate, adjusting for background selection constraints.
 
-*Impact: Reclassifies highly constrained genes previously masked by artificial selection.*
+**Impact:** Reclassifies highly constrained genes previously masked by artificial selection.
 
 #### 2. Fetal-Maternal Variance Decomposition (HMM)
 
@@ -106,7 +106,7 @@ $$d_j = 1 + \frac{\mathbb{E}(\tau_g^2 \mid \mathbf{y}) \cdot w_j + \text{Var}(\b
 *   **$d_j$**: The dynamically allocated marker penalty weight for the $j$-th SNP.
 *   **$\sigma_0^2$**: Expected background baseline polygenic variance.
 
-*Impact: Linearizes highly non-additive lethal variance for $O(N)$ inversion of the genomic relationship matrix ($\mathbf{H}^{-1}$).*
+**Impact:** Linearizes highly non-additive lethal variance for $O(N)$ inversion of the genomic relationship matrix ($\mathbf{H}^{-1}$).
 
 ## Quick Start
 
